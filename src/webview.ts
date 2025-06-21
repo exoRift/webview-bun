@@ -1,5 +1,6 @@
 import { CString, FFIType, JSCallback, type Pointer } from "bun:ffi";
 import { encodeCString, instances, lib } from "./ffi";
+import EventEmitter from "events";
 
 /** Window size */
 export interface Size {
@@ -24,7 +25,7 @@ export const enum SizeHint {
 }
 
 /** An instance of a webview window.*/
-export class Webview {
+export class Webview extends EventEmitter<{ close: [] }> {
   #handle: Pointer | null = null;
   #callbacks: Map<string, JSCallback> = new Map();
 
@@ -143,6 +144,7 @@ export class Webview {
     },
     window: Pointer | null = null,
   ) {
+    super()
     this.#handle =
       typeof debugOrHandle === "bigint" || typeof debugOrHandle === "number"
         ? debugOrHandle
@@ -160,6 +162,7 @@ export class Webview {
     lib.symbols.webview_terminate(this.#handle);
     lib.symbols.webview_destroy(this.#handle);
     this.#handle = null;
+    this.emit('close')
   }
 
   /**
