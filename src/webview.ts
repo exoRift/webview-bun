@@ -1,6 +1,5 @@
 import { CString, FFIType, JSCallback, type Pointer } from "bun:ffi";
 import { encodeCString, instances, lib } from "./ffi";
-import EventEmitter from "events";
 
 /** Window size */
 export interface Size {
@@ -25,7 +24,7 @@ export const enum SizeHint {
 }
 
 /** An instance of a webview window.*/
-export class Webview extends EventEmitter<{ close: [] }> {
+export class Webview {
   #handle: Pointer | null = null;
   #callbacks: Map<string, JSCallback> = new Map();
 
@@ -144,7 +143,6 @@ export class Webview extends EventEmitter<{ close: [] }> {
     },
     window: Pointer | null = null,
   ) {
-    super()
     this.#handle =
       typeof debugOrHandle === "bigint" || typeof debugOrHandle === "number"
         ? debugOrHandle
@@ -162,7 +160,6 @@ export class Webview extends EventEmitter<{ close: [] }> {
     lib.symbols.webview_terminate(this.#handle);
     lib.symbols.webview_destroy(this.#handle);
     this.#handle = null;
-    this.emit('close')
   }
 
   /**
@@ -197,11 +194,17 @@ export class Webview extends EventEmitter<{ close: [] }> {
     return !!lib.symbols.webview_pump_msgloop(this.#handle, block ? 1 : 0);
   }
 
-  /** Run without blocking Bun’s event‑loop. */
-  runNonBlocking(): void {
+  /**
+   * Run without blocking Bun’s event‑loop.
+   * @param onClose A callback for when the webview is closed.
+   */
+  runNonBlocking(onClose?: () => void): void {
     const step = () => {
       if (this.pump(false)) setTimeout(step, 0);
-      else this.destroy();
+      else {
+        this.destroy();
+        onClose?.()
+      }
     };
     step();
   }
