@@ -20,7 +20,8 @@ switch (platform) {
             -DWEBVIEW_BUILD_AMALGAMATION=false \
             -DWEBVIEW_BUILD_EXAMPLES=false \
             -DWEBVIEW_BUILD_STATIC_LIBRARY=false \
-            -DWEBVIEW_BUILD_TESTS=false
+            -DWEBVIEW_BUILD_TESTS=false \
+            -DWEBVIEW_BUILD_DOCS=false
         cmake --build build --config Release
         cp build/core/Release/libwebview.so ../build/libwebview-${arch}.so
         strip ../build/libwebview-${arch}.so
@@ -35,7 +36,8 @@ switch (platform) {
             -DWEBVIEW_BUILD_AMALGAMATION=false \
             -DWEBVIEW_BUILD_EXAMPLES=false \
             -DWEBVIEW_BUILD_STATIC_LIBRARY=false \
-            -DWEBVIEW_BUILD_TESTS=false
+            -DWEBVIEW_BUILD_TESTS=false \
+            -DWEBVIEW_BUILD_DOCS=false
         cmake --build build --config Release
         cp build/core/Release/libwebview.dylib ../build/libwebview.dylib
         strip -x -S ../build/libwebview.dylib

@@ -26,5 +26,6 @@ cmake -G "Ninja Multi-Config" -B build -S . ^
 	-DWEBVIEW_BUILD_AMALGAMATION=false ^
 	-DWEBVIEW_BUILD_EXAMPLES=false ^
 	-DWEBVIEW_BUILD_STATIC_LIBRARY=false ^
-	-DWEBVIEW_BUILD_TESTS=false
+	-DWEBVIEW_BUILD_TESTS=false ^
+	-DWEBVIEW_BUILD_DOCS=false
 cmake --build build --config Release
